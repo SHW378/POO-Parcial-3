@@ -73,9 +73,7 @@ public class Tarea {
         this.estado = estado;
     }
 
-    public boolean CambiarEstado(EstadoTarea nuevoEstado, boolean dependenciasResueltas) {
-        
-    }
+// met
     @Override
     public String toString() {
         return "Tarea{"
