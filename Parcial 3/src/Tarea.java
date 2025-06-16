@@ -74,7 +74,7 @@ public class Tarea {
     }
 
     public boolean CambiarEstado(EstadoTarea nuevoEstado, boolean dependenciasResueltas) {
-
+        
     }
     @Override
     public String toString() {
