@@ -1,8 +1,9 @@
 
 
 public class Tarea {
+    private static int contadorId = 1; 
 
-    private int id;
+    private final int id;
     private String nombre;
     private String descripcion;
     private int duracionHoras;
@@ -16,8 +17,8 @@ public class Tarea {
         BLOQUEADA
     }
 
-    public Tarea(int id, String nombre, String descripcion, int duracionHoras, int prioridad) {
-        this.id = id;
+    public Tarea(String nombre, String descripcion, int duracionHoras, int prioridad) {
+        this.id = contadorId++;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.duracionHoras = duracionHoras;
@@ -27,10 +28,6 @@ public class Tarea {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNombre() {
@@ -73,7 +70,40 @@ public class Tarea {
         this.estado = estado;
     }
 
-// met
+    public boolean cambiarEstado(EstadoTarea nuevoEstado, boolean dependenciasResueltas) {
+        switch (estado) {
+            case PENDIENTE:
+                if (nuevoEstado == EstadoTarea.EN_PROGRESO && dependenciasResueltas) {
+                    estado = EstadoTarea.EN_PROGRESO;
+                    return true;
+                }
+                if (nuevoEstado == EstadoTarea.BLOQUEADA) {
+                    estado = EstadoTarea.BLOQUEADA;
+                    return true;
+                }
+                break;
+            case EN_PROGRESO:
+                if (nuevoEstado == EstadoTarea.COMPLETADA) {
+                    estado = EstadoTarea.COMPLETADA;
+                    return true;
+                }
+                if (nuevoEstado == EstadoTarea.BLOQUEADA) {
+                    estado = EstadoTarea.BLOQUEADA;
+                    return true;
+                }
+                break;
+            case BLOQUEADA:
+                if (nuevoEstado == EstadoTarea.PENDIENTE && dependenciasResueltas) {
+                    estado = EstadoTarea.PENDIENTE;
+                    return true;
+                }
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "Tarea{"
