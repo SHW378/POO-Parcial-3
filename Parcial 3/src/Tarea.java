@@ -1,5 +1,3 @@
-
-
 public class Tarea {
     private static int contadorId = 1; 
 
