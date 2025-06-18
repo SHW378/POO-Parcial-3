@@ -70,7 +70,7 @@ public class Tarea {
 
     public boolean cambiarEstado(EstadoTarea nuevoEstado, boolean dependenciasResueltas) {
         switch (estado) {
-            case PENDIENTE:
+            case PENDIENTE -> {
                 if (nuevoEstado == EstadoTarea.EN_PROGRESO && dependenciasResueltas) {
                     estado = EstadoTarea.EN_PROGRESO;
                     return true;
@@ -79,8 +79,8 @@ public class Tarea {
                     estado = EstadoTarea.BLOQUEADA;
                     return true;
                 }
-                break;
-            case EN_PROGRESO:
+            }
+            case EN_PROGRESO -> {
                 if (nuevoEstado == EstadoTarea.COMPLETADA) {
                     estado = EstadoTarea.COMPLETADA;
                     return true;
@@ -89,15 +89,15 @@ public class Tarea {
                     estado = EstadoTarea.BLOQUEADA;
                     return true;
                 }
-                break;
-            case BLOQUEADA:
+            }
+            case BLOQUEADA -> {
                 if (nuevoEstado == EstadoTarea.PENDIENTE && dependenciasResueltas) {
                     estado = EstadoTarea.PENDIENTE;
                     return true;
                 }
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
         return false;
     }
