@@ -68,6 +68,7 @@ public class Tarea {
         this.estado = estado;
     }
 
+    /* checar
     public boolean cambiarEstado(EstadoTarea nuevoEstado, boolean dependenciasResueltas) {
         switch (estado) {
             case PENDIENTE -> {
@@ -101,7 +102,7 @@ public class Tarea {
         }
         return false;
     }
-
+*/
     @Override
     public String toString() {
         return "Tarea{"
