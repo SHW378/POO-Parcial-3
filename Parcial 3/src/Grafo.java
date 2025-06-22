@@ -1,6 +1,8 @@
+
 import java.util.*;
 
 public class Grafo<T> {
+
     private final Map<T, List<T>> listaAdyacencia;
 
     public Grafo() {
@@ -22,11 +24,11 @@ public class Grafo<T> {
     public boolean agregarDependencia(T origen, T destino) {
         agregarTarea(origen);
         agregarTarea(destino);
-        
+
         if (creaCiclo(origen, destino)) {
             return false;
         }
-        
+
         listaAdyacencia.get(origen).add(destino);
         return true;
     }
@@ -41,6 +43,16 @@ public class Grafo<T> {
         return new ArrayList<>(listaAdyacencia.getOrDefault(tarea, new ArrayList<>()));
     }
 
+    public List<T> obtenerPredecesores(T tarea) {
+        List<T> predecesores = new ArrayList<>();
+        for (Map.Entry<T, List<T>> entry : listaAdyacencia.entrySet()) {
+            if (entry.getValue().contains(tarea)) {
+                predecesores.add(entry.getKey());
+            }
+        }
+        return predecesores;
+    }
+
     public boolean contieneTarea(T tarea) {
         return listaAdyacencia.containsKey(tarea);
     }
@@ -49,14 +61,14 @@ public class Grafo<T> {
         List<T> resultado = new ArrayList<>();
         Set<T> visitados = new HashSet<>();
         Queue<T> cola = new LinkedList<>();
-        
+
         cola.add(inicio);
         visitados.add(inicio);
-        
+
         while (!cola.isEmpty()) {
             T actual = cola.poll();
             resultado.add(actual);
-            
+
             for (T adyacente : listaAdyacencia.getOrDefault(actual, new ArrayList<>())) {
                 if (!visitados.contains(adyacente)) {
                     visitados.add(adyacente);
@@ -78,7 +90,7 @@ public class Grafo<T> {
         if (!visitados.contains(tarea)) {
             visitados.add(tarea);
             resultado.add(tarea);
-            
+
             for (T adyacente : listaAdyacencia.getOrDefault(tarea, new ArrayList<>())) {
                 dfs(adyacente, visitados, resultado);
             }
@@ -86,16 +98,20 @@ public class Grafo<T> {
     }
 
     private boolean creaCiclo(T origen, T destino) {
-        if (origen.equals(destino)) return true;
-        
+        if (origen.equals(destino)) {
+            return true;
+        }
+
         Set<T> visitados = new HashSet<>();
         Queue<T> cola = new LinkedList<>();
         cola.add(destino);
-        
+
         while (!cola.isEmpty()) {
             T actual = cola.poll();
-            if (actual.equals(origen)) return true;
-            
+            if (actual.equals(origen)) {
+                return true;
+            }
+
             if (!visitados.contains(actual)) {
                 visitados.add(actual);
                 for (T adyacente : listaAdyacencia.getOrDefault(actual, new ArrayList<>())) {
