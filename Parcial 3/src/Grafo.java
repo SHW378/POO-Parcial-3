@@ -1,8 +1,6 @@
-
 import java.util.*;
 
 public class Grafo<T> {
-
     private final Map<T, List<T>> listaAdyacencia;
 
     public Grafo() {
@@ -14,7 +12,6 @@ public class Grafo<T> {
     }
 
     public void eliminarTarea(T tarea) {
-        // Eliminar la tarea como destino de otras dependencias
         for (List<T> dependencias : listaAdyacencia.values()) {
             dependencias.remove(tarea);
         }
@@ -24,11 +21,9 @@ public class Grafo<T> {
     public boolean agregarDependencia(T origen, T destino) {
         agregarTarea(origen);
         agregarTarea(destino);
-
         if (creaCiclo(origen, destino)) {
             return false;
         }
-
         listaAdyacencia.get(origen).add(destino);
         return true;
     }
@@ -98,9 +93,7 @@ public class Grafo<T> {
     }
 
     private boolean creaCiclo(T origen, T destino) {
-        if (origen.equals(destino)) {
-            return true;
-        }
+        if (origen.equals(destino)) return true;
 
         Set<T> visitados = new HashSet<>();
         Queue<T> cola = new LinkedList<>();
@@ -108,9 +101,7 @@ public class Grafo<T> {
 
         while (!cola.isEmpty()) {
             T actual = cola.poll();
-            if (actual.equals(origen)) {
-                return true;
-            }
+            if (actual.equals(origen)) return true;
 
             if (!visitados.contains(actual)) {
                 visitados.add(actual);

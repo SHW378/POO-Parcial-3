@@ -1,12 +1,103 @@
-
 import java.util.*;
 
 public class Proyecto {
+    private String nombre;
+    private String descripcion;
+    private Map<Integer, Tarea> tareas;
+    private Grafo<Integer> grafoDependencias;
 
-    /*  como quedaria quicksort y heapsort
+    public Proyecto(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.tareas = new HashMap<>();
+        this.grafoDependencias = new Grafo<>();
+    }
 
+    // Crear tarea con ID controlado externamente
+    public Tarea crearTarea(int id, String nombre, String descripcion, int duracionHoras, int prioridad) {
+        Tarea nueva = new Tarea(id, nombre, descripcion, duracionHoras, prioridad);
+        tareas.put(nueva.getId(), nueva);
+        grafoDependencias.agregarTarea(nueva.getId());
+        return nueva;
+    }
 
-    // Método auxiliar para intercambiar elementos en una lista
+    public boolean eliminarTarea(int id) {
+        if (tareas.containsKey(id)) {
+            tareas.remove(id);
+            grafoDependencias.eliminarTarea(id);
+            return true;
+        }
+        return false;
+    }
+
+    public String imprimirTarea(int id) {
+        Tarea t = tareas.get(id);
+        return (t != null) ? t.toString() : "El registro está vacío.";
+    }
+
+    public boolean agregarDependencia(int idPredecesor, int idSucesor) {
+        return grafoDependencias.agregarDependencia(idPredecesor, idSucesor);
+    }
+
+    public void eliminarDependencia(int idPredecesor, int idSucesor) {
+        grafoDependencias.eliminarDependencia(idPredecesor, idSucesor);
+    }
+
+    public List<Integer> dependenciasDe(int id) {
+        return grafoDependencias.obtenerDependencias(id);
+    }
+
+    public boolean actualizarEstadoTarea(int id, Tarea.EstadoTarea nuevoEstado) {
+        Tarea tarea = tareas.get(id);
+        if (tarea == null) return false;
+        if (tarea.getEstado() == Tarea.EstadoTarea.BLOQUEADA)
+            return false;
+        if (nuevoEstado == Tarea.EstadoTarea.EN_PROGRESO || nuevoEstado == Tarea.EstadoTarea.COMPLETADA) {
+            for (int pre : grafoDependencias.obtenerPredecesores(id)) {
+                Tarea tpre = tareas.get(pre);
+                if (tpre != null && tpre.getEstado() != Tarea.EstadoTarea.COMPLETADA)
+                    return false;
+            }
+        }
+        return tarea.cambiarEstado(nuevoEstado, true);
+    }
+
+    public List<Tarea> filtrarPorEstado(Tarea.EstadoTarea estado) {
+        List<Tarea> resultado = new ArrayList<>();
+        for (Tarea t : tareas.values()) {
+            if (t.getEstado() == estado) resultado.add(t);
+        }
+        return resultado;
+    }
+
+    public List<Tarea> filtrarPorPrioridad(int prioridad) {
+        List<Tarea> resultado = new ArrayList<>();
+        for (Tarea t : tareas.values()) {
+            if (t.getPrioridad() == prioridad) resultado.add(t);
+        }
+        return resultado;
+    }
+
+    public List<Tarea> tareasDisponibles() {
+        Set<Integer> disponibles = new HashSet<>();
+        for (Integer id : tareas.keySet()) {
+            boolean disponible = true;
+            for (int predecesor : grafoDependencias.obtenerPredecesores(id)) {
+                Tarea pre = tareas.get(predecesor);
+                if (pre == null || pre.getEstado() != Tarea.EstadoTarea.COMPLETADA) {
+                    disponible = false;
+                    break;
+                }
+            }
+            if (disponible && tareas.get(id).getEstado() == Tarea.EstadoTarea.PENDIENTE)
+                disponibles.add(id);
+        }
+        List<Tarea> resultado = new ArrayList<>();
+        for (int id : disponibles) resultado.add(tareas.get(id));
+        return resultado;
+    }
+
+    // ----- Métodos de Ordenamiento -----
     private void intercambiar(List<Tarea> tareas, int i, int j) {
         Tarea temp = tareas.get(i);
         tareas.set(i, tareas.get(j));
@@ -72,6 +163,31 @@ public class Proyecto {
             heapify(lista, n, largest);
         }
     }
+    // ----- Fin métodos de ordenamiento -----
 
-     */
+    public String estadisticas() {
+        int pendientes = filtrarPorEstado(Tarea.EstadoTarea.PENDIENTE).size();
+        int enProgreso = filtrarPorEstado(Tarea.EstadoTarea.EN_PROGRESO).size();
+        int completadas = filtrarPorEstado(Tarea.EstadoTarea.COMPLETADA).size();
+        int bloqueadas = filtrarPorEstado(Tarea.EstadoTarea.BLOQUEADA).size();
+        int totalTareas = pendientes + enProgreso + completadas + bloqueadas;
+        int capacidad = 0;
+        for (Tarea t : tareas.values()) capacidad += t.getDuracionHoras();
+        String completado = (pendientes == 0 && enProgreso == 0 && bloqueadas == 0 && completadas > 0) ? "Si" : "No";
+
+        return "Nombre del proyecto: " + nombre + "\n" +
+               "Descripción: " + descripcion + "\n" +
+               "Estadísticas:\n" +
+               "- Total de tareas: " + totalTareas + "\n" +
+               "- Pendientes: " + pendientes + "\n" +
+               "- En progreso: " + enProgreso + "\n" +
+               "- Completadas: " + completadas + "\n" +
+               "- Bloqueadas: " + bloqueadas + "\n" +
+               "- Capacidad: " + capacidad + "\n" +
+               "- Proyecto completado: " + completado;
+    }
+
+    public Tarea getTarea(int id) { return tareas.get(id); }
+    public Grafo<Integer> getGrafo() { return grafoDependencias; }
+    public Collection<Tarea> getTareas() { return tareas.values(); }
 }
