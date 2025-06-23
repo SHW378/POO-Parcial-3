@@ -3,18 +3,22 @@ import java.util.*;
 public class Proyecto {
     private String nombre;
     private String descripcion;
+    private int capacidadMaxima;
     private Map<Integer, Tarea> tareas;
     private Grafo<Integer> grafoDependencias;
 
-    public Proyecto(String nombre, String descripcion) {
+    public Proyecto(String nombre, String descripcion, int capacidadMaxima) {
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.capacidadMaxima = capacidadMaxima;
         this.tareas = new HashMap<>();
         this.grafoDependencias = new Grafo<>();
     }
 
-    // Crear tarea con ID controlado externamente
     public Tarea crearTarea(int id, String nombre, String descripcion, int duracionHoras, int prioridad) {
+        if (tareas.size() >= capacidadMaxima) {
+            return null; // No se pueden crear más tareas
+        }
         Tarea nueva = new Tarea(id, nombre, descripcion, duracionHoras, prioridad);
         tareas.put(nueva.getId(), nueva);
         grafoDependencias.agregarTarea(nueva.getId());
@@ -50,15 +54,7 @@ public class Proyecto {
     public boolean actualizarEstadoTarea(int id, Tarea.EstadoTarea nuevoEstado) {
         Tarea tarea = tareas.get(id);
         if (tarea == null) return false;
-        if (tarea.getEstado() == Tarea.EstadoTarea.BLOQUEADA)
-            return false;
-        if (nuevoEstado == Tarea.EstadoTarea.EN_PROGRESO || nuevoEstado == Tarea.EstadoTarea.COMPLETADA) {
-            for (int pre : grafoDependencias.obtenerPredecesores(id)) {
-                Tarea tpre = tareas.get(pre);
-                if (tpre != null && tpre.getEstado() != Tarea.EstadoTarea.COMPLETADA)
-                    return false;
-            }
-        }
+        // La validación de dependencias y advertencias se hace en el menú
         return tarea.cambiarEstado(nuevoEstado, true);
     }
 
@@ -177,13 +173,14 @@ public class Proyecto {
 
         return "Nombre del proyecto: " + nombre + "\n" +
                "Descripción: " + descripcion + "\n" +
+               "Capacidad máxima de tareas: " + capacidadMaxima + "\n" +
                "Estadísticas:\n" +
                "- Total de tareas: " + totalTareas + "\n" +
                "- Pendientes: " + pendientes + "\n" +
                "- En progreso: " + enProgreso + "\n" +
                "- Completadas: " + completadas + "\n" +
                "- Bloqueadas: " + bloqueadas + "\n" +
-               "- Capacidad: " + capacidad + "\n" +
+               "- Capacidad (suma de horas): " + capacidad + "\n" +
                "- Proyecto completado: " + completado;
     }
 

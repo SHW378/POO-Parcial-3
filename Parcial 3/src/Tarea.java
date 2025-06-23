@@ -1,4 +1,6 @@
+
 public class Tarea {
+
     private int id;
     private String nombre;
     private String descripcion;
@@ -22,36 +24,79 @@ public class Tarea {
         this.estado = EstadoTarea.PENDIENTE; // Estado inicial
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public int getDuracionHoras() { return duracionHoras; }
-    public void setDuracionHoras(int duracionHoras) { this.duracionHoras = duracionHoras; }
-    public int getPrioridad() { return prioridad; }
-    public void setPrioridad(int prioridad) { this.prioridad = prioridad; }
-    public EstadoTarea getEstado() { return estado; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public int getDuracionHoras() {
+        return duracionHoras;
+    }
+
+    public void setDuracionHoras(int duracionHoras) {
+        this.duracionHoras = duracionHoras;
+    }
+
+    public int getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
+    }
+
+    public EstadoTarea getEstado() {
+        return estado;
+    }
 
     // Cambiar estado con métodos explícitos
-    public void setEstadoPENDIENTE() { this.estado = EstadoTarea.PENDIENTE; }
-    public void setEstadoEN_PROGRESO() { this.estado = EstadoTarea.EN_PROGRESO; }
-    public void setEstadoCOMPLETADA() { this.estado = EstadoTarea.COMPLETADA; }
-    public void setEstadoBLOQUEADA() { this.estado = EstadoTarea.BLOQUEADA; }
+    public void setEstadoPENDIENTE() {
+        this.estado = EstadoTarea.PENDIENTE;
+    }
+
+    public void setEstadoEN_PROGRESO() {
+        this.estado = EstadoTarea.EN_PROGRESO;
+    }
+
+    public void setEstadoCOMPLETADA() {
+        this.estado = EstadoTarea.COMPLETADA;
+    }
+
+    public void setEstadoBLOQUEADA() {
+        this.estado = EstadoTarea.BLOQUEADA;
+    }
 
     // Imprime esta tarea usando un arreglo de tareas (para compatibilidad)
-    public void imprimir(Tarea tarea[]){
-        System.out.println("Tarea "+ tarea[id].getId() + "[ Nombre: " + tarea[id].getNombre() +
-        ", Descripcion: " + tarea[id].getDescripcion() + ", Duracion en horas: "+ tarea[id].getDuracionHoras() +
-        ", Prioridad: " + tarea[id].getPrioridad() + ", Estado: " + tarea[id].getEstado() + "]");
+    public void imprimir(Tarea tarea[]) {
+        System.out.println("Tarea " + tarea[id].getId() + "[ Nombre: " + tarea[id].getNombre()
+                + ", Descripcion: " + tarea[id].getDescripcion() + ", Duracion en horas: " + tarea[id].getDuracionHoras()
+                + ", Prioridad: " + tarea[id].getPrioridad() + ", Estado: " + tarea[id].getEstado() + "]");
     }
 
     public boolean cambiarEstado(EstadoTarea nuevoEstado, boolean dependenciasResueltas) {
         switch (estado) {
             case PENDIENTE -> {
-                if (nuevoEstado == EstadoTarea.EN_PROGRESO && dependenciasResueltas) {
-                    estado = EstadoTarea.EN_PROGRESO;
+                if ((nuevoEstado == EstadoTarea.EN_PROGRESO || nuevoEstado == EstadoTarea.COMPLETADA) && dependenciasResueltas) {
+                    estado = nuevoEstado;
                     return true;
                 }
                 if (nuevoEstado == EstadoTarea.BLOQUEADA) {
@@ -75,7 +120,8 @@ public class Tarea {
                     return true;
                 }
             }
-            default -> {}
+            default -> {
+            }
         }
         return false;
     }
