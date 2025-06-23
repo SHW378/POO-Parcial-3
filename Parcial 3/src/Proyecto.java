@@ -187,4 +187,5 @@ public class Proyecto {
     public Tarea getTarea(int id) { return tareas.get(id); }
     public Grafo<Integer> getGrafo() { return grafoDependencias; }
     public Collection<Tarea> getTareas() { return tareas.values(); }
+    public int getCapacidadMaxima() { return capacidadMaxima; }
 }
