@@ -1,0 +1,104 @@
+@startuml
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+enum EstadoTarea << enumeration >> {
+  + EstadoTarea():
+  + valueOf(String): EstadoTarea
+  + values(): EstadoTarea[]
+}
+class Grafo<T> {
+  + Grafo():
+  + obtenerDependencias(T): List<T>
+  - dfs(T, Set<T>, List<T>): void
+  + recorridoBFS(T): List<T>
+  + eliminarTarea(T): void
+  + eliminarDependencia(T, T): void
+  + agregarTarea(T): void
+  + recorridoDFS(T): List<T>
+  - creaCiclo(T, T): boolean
+  + agregarDependencia(T, T): boolean
+  + obtenerPredecesores(T): List<T>
+  + contieneTarea(T): boolean
+}
+class Main {
+  + Main():
+  - crearTarea(): void
+  - mostrarEstadisticas(): void
+  - eliminarTarea(): void
+  - eliminarDependencia(): void
+  - filtrarTareasPorEstado(): void
+  - mostrarTareasPorPrioridad(): void
+  - mostrarTareasPorDuracion(): void
+  - recorridoDFS(): void
+  - establecerDependencia(): void
+  - mostrarTareasDisponibles(): void
+  - leerEntero(): int
+  - mostrarMenu(): void
+  - filtrarTareasPorPrioridad(): void
+  - recorridoBFS(): void
+  + main(String[]): void
+  - actualizarEstadoTarea(): void
+}
+class Proyecto {
+  + Proyecto(String, String, int):
+  - nombre: String
+  - descripcion: String
+  - capacidadMaxima: int
+  - tareas: Map<Integer, Tarea>
+  - grafoDependencias: Grafo<Integer>
+  + filtrarPorEstado(EstadoTarea): List<Tarea>
+  + agregarDependencia(int, int): boolean
+  + eliminarDependencia(int, int): void
+  + actualizarEstadoTarea(int, EstadoTarea): boolean
+  + filtrarPorPrioridad(int): List<Tarea>
+  - intercambiar(List<Tarea>, int, int): void
+  + crearTarea(int, String, String, int, int): Tarea
+  + ordenarPorPrioridadQuickSort(): List<Tarea>
+  + eliminarTarea(int): boolean
+  + dependenciasDe(int): List<Integer>
+  + ordenarPorDuracionHeapSort(): List<Tarea>
+  + imprimirTarea(int): String
+  - quickSortPorPrioridad(List<Tarea>, int, int): void
+  - heapify(List<Tarea>, int, int): void
+  + tareasDisponibles(): List<Tarea>
+  - partitionPorPrioridad(List<Tarea>, int, int): int
+  + estadisticas(): String
+  + getTarea(int): Tarea
+  - heapSortPorDuracion(List<Tarea>): void
+   grafo: Grafo<Integer>
+   tareas: Collection<Tarea>
+   capacidadMaxima: int
+}
+class Tarea {
+  + Tarea(int, String, String, int, int):
+  - id: int
+  - estado: EstadoTarea
+  - nombre: String
+  - descripcion: String
+  - duracionHoras: int
+  - prioridad: int
+  + setEstadoCOMPLETADA(): void
+  + setEstadoPENDIENTE(): void
+  + setEstadoEN_PROGRESO(): void
+  + setEstadoBLOQUEADA(): void
+  + cambiarEstado(EstadoTarea, boolean): boolean
+  + imprimir(Tarea[]): void
+  + toString(): String
+   descripcion: String
+   estado: EstadoTarea
+   prioridad: int
+   duracionHoras: int
+   id: int
+   nombre: String
+}
+
+EstadoTarea  +-[#820000,plain]-  Tarea
+Main         -[#595959,dashed]->  Proyecto    : "«create»"
+Main        "1" *-[#595959,plain]-> "proyecto\n1" Proyecto
+Proyecto    "1" *-[#595959,plain]-> "grafoDependencias\n1" Grafo
+Proyecto     -[#595959,dashed]->  Grafo       : " «create» "
+Proyecto     -[#595959,dashed]->  Tarea       : "\n«create»"
+Proyecto    "   1" *-[#595959,plain]-> "\ntareas\n*" Tarea
+Tarea       "1" *-[#595959,plain]-> "estado\n1" EstadoTarea
+@enduml
