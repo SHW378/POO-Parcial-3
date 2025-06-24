@@ -167,23 +167,21 @@ public class Proyecto {
         int completadas = filtrarPorEstado(Tarea.EstadoTarea.COMPLETADA).size();
         int bloqueadas = filtrarPorEstado(Tarea.EstadoTarea.BLOQUEADA).size();
         int totalTareas = pendientes + enProgreso + completadas + bloqueadas;
-        int capacidad = 0;
-        for (Tarea t : tareas.values()) capacidad += t.getDuracionHoras();
+
         String completado = (pendientes == 0 && enProgreso == 0 && bloqueadas == 0 && completadas > 0) ? "Si" : "No";
 
         return "Nombre del proyecto: " + nombre + "\n" +
                "Descripción: " + descripcion + "\n" +
-               "Capacidad máxima de tareas: " + capacidadMaxima + "\n" +
                "Estadísticas:\n" +
                "- Total de tareas: " + totalTareas + "\n" +
                "- Pendientes: " + pendientes + "\n" +
                "- En progreso: " + enProgreso + "\n" +
                "- Completadas: " + completadas + "\n" +
                "- Bloqueadas: " + bloqueadas + "\n" +
-               "- Capacidad (suma de horas): " + capacidad + "\n" +
+               "- Capacidad: " + capacidadMaxima + "\n" +
                "- Proyecto completado: " + completado;
     }
-
+    
     public Tarea getTarea(int id) { return tareas.get(id); }
     public Grafo<Integer> getGrafo() { return grafoDependencias; }
     public Collection<Tarea> getTareas() { return tareas.values(); }
