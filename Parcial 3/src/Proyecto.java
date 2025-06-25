@@ -43,8 +43,12 @@ public class Proyecto {
         return grafoDependencias.agregarDependencia(idPredecesor, idSucesor);
     }
 
-    public void eliminarDependencia(int idPredecesor, int idSucesor) {
-        grafoDependencias.eliminarDependencia(idPredecesor, idSucesor);
+    public boolean eliminarDependencia(int idPredecesor, int idSucesor) {
+        if (grafoDependencias.obtenerDependencias(idPredecesor).contains(idSucesor)) {
+            grafoDependencias.eliminarDependencia(idPredecesor, idSucesor);
+            return true;
+        }
+        return false;
     }
 
     public List<Integer> dependenciasDe(int id) {
@@ -181,6 +185,7 @@ public class Proyecto {
                "- Capacidad: " + capacidadMaxima + "\n" +
                "- Proyecto completado: " + completado;
     }
+    
     
     public Tarea getTarea(int id) { return tareas.get(id); }
     public Grafo<Integer> getGrafo() { return grafoDependencias; }

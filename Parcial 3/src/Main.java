@@ -10,15 +10,28 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("=== GESTOR DE PROYECTOS ===");
-        System.out.println("Ingrese el nombre del proyecto: ");
-        String nombreProyecto = scanner.nextLine();
-        System.out.println("Ingrese la descripción del proyecto: ");
-        String descripcionProyecto = scanner.nextLine();
+        String nombreProyecto;
+        do {
+            System.out.println("Ingrese el nombre del proyecto: ");
+            nombreProyecto = scanner.nextLine();
+            if (nombreProyecto.isEmpty()) {
+                System.out.println("El nombre del proyecto no puede estar vacío.");
+            }
+        } while (nombreProyecto.isEmpty());
+
+        String descripcionProyecto;
+        do {
+            System.out.println("Ingrese la descripción del proyecto: ");
+            descripcionProyecto = scanner.nextLine();
+            if (descripcionProyecto.isEmpty()) {
+                System.out.println("La descripción del proyecto no puede estar vacía.");
+            }
+        } while (descripcionProyecto.isEmpty());
+
         System.out.print("Ingrese la capacidad máxima de tareas: ");
         int capacidadMaxima = leerEntero();
 
         proyecto = new Proyecto(nombreProyecto, descripcionProyecto, capacidadMaxima);
-
         int opcion;
         do {
             mostrarMenu();
@@ -138,8 +151,11 @@ public class Main {
         int idPre = leerEntero();
         System.out.print("ID de tarea sucesora: ");
         int idSuc = leerEntero();
-        proyecto.eliminarDependencia(idPre, idSuc);
-        System.out.println("Dependencia eliminada.");
+        if (proyecto.eliminarDependencia(idPre, idSuc)) {
+            System.out.println("Dependencia eliminada.");
+        } else {
+            System.out.println("No existe esa dependencia entre esas tareas.");
+        }
     }
 
     private static void actualizarEstadoTarea() {
